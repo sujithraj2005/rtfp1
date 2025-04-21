@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Placed</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            padding: 40px;
+            color: #333;
+        }
+        .success-box {
+            background-color: #fff;
+            padding: 30px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: green;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .total {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #1e90ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #1c86ee;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <h2>🎉 Order Placed Successfully!</h2>
+        <p>Thank you for shopping with Medikart. Here's what you ordered:</p>
+        <ul>
+            {% for item in items %}
+                <li>{{ item.name }} x {{ item.quantity }} = ₹{{ item.price * item.quantity }}</li>
+            {% endfor %}
+        </ul>
+        <div class="total">Total Paid: ₹{{ total }}</div>
+        <a href="{{ url_for('dashboard') }}" class="btn">Continue Shopping</a>
+    </div>
+</body>
+</html>

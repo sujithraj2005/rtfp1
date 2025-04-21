@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Sell Back Requests</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* body {
+            font-family: sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        } */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .admin-actions {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .admin-actions a {
+            display: inline-block;
+            margin-right: 10px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-actions a:hover {
+            background-color: #e9ecef;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #343a40;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .alert {
+            margin-bottom: 15px;
+        }
+
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #1e90ff;
+            color: white;
+        }
+
+        header .logo h1 {
+            font-size: 2rem;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Medikart</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('admin_add_product') }}">Add New Product</a></li>
+                <li><a href="{{ url_for('admin_sell_back') }}">View Sell Back Requests</a></li>
+                <li><a href="{{ url_for('admin_sell_back_history') }}">Sell Back History</a></li>
+                <li><a href="{{ url_for('admin_user_profile') }}">User Profile Lookup</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container mt-5">
+        <h2>Admin - Sell Back Requests</h2>
+        {% if requests %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>User</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Requested Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                        <tr>
+                            <td>{{ req._id }}</td>
+                            <td>{{ req.user_id }}</td>
+                            <td>{{ req.product_name }}</td>
+                            <td>{{ req.quantity }}</td>
+                            <td>{{ req.request_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('admin_process_sell_back') }}">
+                                    <input type="hidden" name="request_id" value="{{ req._id }}">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control form-control-sm" name="sell_back_price" placeholder="Offer Price" required min="0">
+                                        <button type="submit" class="btn btn-success btn-sm">Process</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">No pending sell back requests.</p>
+        {% endif %}
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Admin Dashboard</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
